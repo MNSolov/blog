@@ -1,0 +1,100 @@
+$tag-color: rgba(0, 0, 0, 50%);
+$text-color: rgba(0, 0, 0, 75%);
+$author-name-color: rgba(0, 0, 0, 85%);
+
+.article-card {
+    width: 940px;
+    height: 140px;
+
+    margin-left: auto;
+    margin-right: auto;
+    padding: 15px;
+
+    background-color: white;
+    box-shadow: 0 4px 12px 0 rgba($color: #000000, $alpha: 15%);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.article-card__info {
+    flex-grow: 1.1;
+}
+
+.article-card__header {
+    display: flex;
+
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+}
+
+.article-card__title {
+    margin: 0;
+    padding-bottom: 5px;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    color: #1890FF;
+}
+
+.article-card__likes-number {
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 22px;
+    color: black;
+}
+
+.article-card__like {
+    padding-left: 10px;
+}
+
+.article-card__text {
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    color: $text-color;
+}
+
+.article-card__author-info {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.article-card__author-header {
+    margin-right: 10px;
+}
+
+.article-card__author-avatar {
+    width: 46px;
+}
+
+.article-card__author-name {
+    margin: 0;
+    padding-right: 10px;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    color: $author-name-color;
+}
+
+.article-card__author-date {
+    margin: 0;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 22px;
+    color: $tag-color;
+}

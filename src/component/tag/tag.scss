@@ -1,0 +1,15 @@
+$tag-color: rgba(0, 0, 0, 50%);
+
+.article-card__tag {
+    display: inline;
+    padding: 2px;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    
+    border: 1px solid $tag-color;
+    color: $tag-color;
+    border-radius: 2px;
+}
