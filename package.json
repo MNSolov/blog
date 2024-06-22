@@ -10,6 +10,7 @@
     "@types/node": "^16.18.100",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/typescript-estree": "^7.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
@@ -21,9 +22,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix --color",
-    "format": "prettier ./src -write",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint ./src  --ext .js,.jsx,.ts,.tsx --fix --color",
+    "format": "prettier 'src/**/*.ts/*.tsx' --write",
     "prepare": "husky"
   },
   "eslintConfig": {
@@ -43,8 +44,12 @@
       "plugin:prettier/recommended",
       "plugin:import/errors",
       "plugin:import/warnings",
-      "prettier"
+      "prettier",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
     ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
       "ecmaFeatures": {
         "jsx": true
@@ -55,9 +60,20 @@
     "plugins": [
       "react",
       "prettier",
-      "import"
+      "import",
+      "@typescript-eslint"
     ],
     "rules": {
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "jsx": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+      ],
       "indent": [
         "error",
         2
@@ -66,8 +82,7 @@
         "error",
         {
           "singleQuote": true,
-          "semi": false,
-          "parser": "flow"
+          "semi": false
         }
       ],
       "linebreak-style": [
@@ -97,7 +112,7 @@
             ".js",
             ".jsx",
             ".ts",
-            "tsx"
+            ".tsx"
           ]
         }
       ],
@@ -166,7 +181,7 @@
     "semi": false
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,jsx,ts,tsx}": [
       "npm run lint:fix",
       "git add"
     ]
