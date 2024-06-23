@@ -25,6 +25,7 @@ export interface State {
   articles: {
     articlesArray: Array<ArticleProps>
     articlesCount: number
+    currentPage: number
   }
 }
 
@@ -34,6 +35,7 @@ export const initState: State = {
   articles: {
     articlesArray: [],
     articlesCount: 0,
+    currentPage: 0,
   },
   isLoading: false,
   error: '',
@@ -57,6 +59,7 @@ export default function mainReducer(state: State, actions: Actions) {
     } else {
       result.articles.articlesArray = actions.articles
       result.articles.articlesCount = actions.articlesCount
+      result.articles.currentPage = actions.currentPage
     }
   }
 

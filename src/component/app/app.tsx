@@ -1,37 +1,22 @@
 import React, { useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 
-import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import ArticleListPage from '../article-list-page'
+import ArticlePage from '../article-page'
+import { useAppSelector } from '../../redux/hooks'
 import { RootState } from '../../redux/store'
-import { ArticleProps } from '../../redux/reducer'
-import Article from '../article'
-import ApiService from '../api-service'
+import getArticles from '../../redux/actions'
+
 import './app.scss'
+
+const limitArticleOnPage = 5
 
 export default function App() {
   const { articles, isLoading, error } = useAppSelector((state: RootState) => state.state)
 
-  const api = new ApiService()
-  const dispatch = useAppDispatch()
-
-  const getArticles = () =>
-    dispatch(async () => {
-      dispatch({ type: 'SEND_REQUEST' })
-      api
-        .getArticles()
-        .then((responce) => {
-          dispatch({ type: 'GET_RESPONSE', articles: responce.articles, articlesCount: responce.articlesCount })
-        })
-        .catch((errorResponce) => ({ type: 'GET_RESPONSE', error: errorResponce }))
-    })
-
   useEffect(() => {
-    if (articles.articlesCount === 0 && isLoading === false && error === '') getArticles()
+    if (articles.articlesCount === 0 && isLoading === false && error === '') getArticles(0, limitArticleOnPage)
   })
-
-  const articleList =
-    articles.articlesArray.length > 0
-      ? articles.articlesArray.map((item: ArticleProps) => <Article key={Math.random()} article={item} />)
-      : null
 
   return (
     <>
@@ -46,7 +31,14 @@ export default function App() {
           </button>
         </div>
       </header>
-      <main>{articleList}</main>
+      <main>
+        <Routes>
+          <Route path="/" element={<ArticleListPage articles={articles} limitArticleOnPage={limitArticleOnPage} />} />
+        </Routes>
+        <Routes>
+          <Route path="/article/:slug" element={<ArticlePage articles={articles.articlesArray} />} />
+        </Routes>
+      </main>
     </>
   )
 }

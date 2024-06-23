@@ -1,6 +1,19 @@
 $tag-color: rgba(0, 0, 0, 50%);
 
-.article-card__tag {
+.tag-list {
+    margin: 0;
+    padding: 0;
+    
+    list-style: none;
+    
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    gap: 5px;
+}
+
+.tag {
     display: inline;
     padding: 2px;
 

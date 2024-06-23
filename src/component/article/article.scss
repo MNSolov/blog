@@ -13,16 +13,19 @@ $author-name-color: rgba(0, 0, 0, 85%);
     background-color: white;
     box-shadow: 0 4px 12px 0 rgba($color: #000000, $alpha: 15%);
 
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    &--large {
+        height: 810px;
+        // flex-wrap: wrap;
+    }
 }
 
 .article-card__info {
     flex-grow: 1.1;
+    // padding-right: 20px;
 }
 
-.article-card__header {
+.article-card__header-info {
+    padding-bottom: 5px;
     display: flex;
 
     flex-direction: row;
@@ -31,9 +34,17 @@ $author-name-color: rgba(0, 0, 0, 85%);
     gap: 5px;
 }
 
+.article-card__header {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 30px;
+}
+
 .article-card__title {
     margin: 0;
-    padding-bottom: 5px;
 
     font-family: Inter, Arial, sans-serif;
     font-weight: 400;
@@ -55,6 +66,8 @@ $author-name-color: rgba(0, 0, 0, 85%);
 }
 
 .article-card__text {
+    width: 100%;
+    height: 100%;
     font-family: Inter, Arial, sans-serif;
     font-weight: 400;
     font-size: 12px;
@@ -74,8 +87,17 @@ $author-name-color: rgba(0, 0, 0, 85%);
     margin-right: 10px;
 }
 
+// .article-card__author-avatar {
+//     width: 46px;
+// }
+
 .article-card__author-avatar {
-    width: 46px;
+    min-width: 50px;
+    min-height: 50px;
+    border-radius: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .article-card__author-name {
