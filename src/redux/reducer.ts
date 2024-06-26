@@ -21,7 +21,11 @@ export interface State {
   pageNumber: number
   isAuthority: boolean
   isLoading: boolean
-  error: string
+  error: {
+    is: boolean
+    from: string
+    status: string
+  }
   articles: {
     articlesArray: Array<ArticleProps>
     articlesCount: number
@@ -38,7 +42,11 @@ export const initState: State = {
     currentPage: 0,
   },
   isLoading: false,
-  error: '',
+  error: {
+    is: false,
+    from: '',
+    status: '',
+  },
 }
 
 type Actions = UnknownAction & State['articles']
@@ -52,15 +60,29 @@ export default function mainReducer(state: State, actions: Actions) {
     result.isLoading = true
   }
 
-  if (actions.type === 'GET_RESPONSE') {
+  if (actions.type === 'GET_ARTICLES') {
     result.isLoading = false
-    if (actions.error) {
-      result.error = actions.error as string
-    } else {
-      result.articles.articlesArray = actions.articles
-      result.articles.articlesCount = actions.articlesCount
-      result.articles.currentPage = actions.currentPage
-    }
+    result.articles.articlesArray = actions.articles
+    result.articles.articlesCount = actions.articlesCount
+    result.articles.currentPage = actions.currentPage
+  }
+
+  if (actions.type === 'GET_ARTICLE_BY_SLUG') {
+    result.isLoading = false
+    result.articles.articlesArray.push(actions.article)
+  }
+
+  if (actions.type === 'GET_ERROR') {
+    result.isLoading = false
+    result.error.status = actions.error as string
+    result.error.is = true
+    result.error.from = actions.from as string
+  }
+
+  if (actions.type === 'ERROR_CLEAR') {
+    result.error.status = ''
+    result.error.is = false
+    result.error.from = ''
   }
 
   return result

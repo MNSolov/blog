@@ -1,27 +1,20 @@
-import React, { useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import React from 'react'
+import { Routes, Route, Link } from 'react-router-dom'
 
 import ArticleListPage from '../article-list-page'
 import ArticlePage from '../article-page'
-import { useAppSelector } from '../../redux/hooks'
-import { RootState } from '../../redux/store'
-import getArticles from '../../redux/actions'
 
 import './app.scss'
 
 const limitArticleOnPage = 5
 
 export default function App() {
-  const { articles, isLoading, error } = useAppSelector((state: RootState) => state.state)
-
-  useEffect(() => {
-    if (articles.articlesCount === 0 && isLoading === false && error === '') getArticles(0, limitArticleOnPage)
-  })
-
   return (
     <>
       <header className="header">
-        <p className="header__title">Realworld Blog</p>
+        <Link className="header__link" to="/">
+          <p className="header__title">Realworld Blog</p>
+        </Link>
         <div>
           <button className="header-button__sing-in" type="button">
             Sing In
@@ -33,10 +26,8 @@ export default function App() {
       </header>
       <main>
         <Routes>
-          <Route path="/" element={<ArticleListPage articles={articles} limitArticleOnPage={limitArticleOnPage} />} />
-        </Routes>
-        <Routes>
-          <Route path="/article/:slug" element={<ArticlePage articles={articles.articlesArray} />} />
+          <Route path="/" element={<ArticleListPage limitArticleOnPage={limitArticleOnPage} />} />
+          <Route path="/article/:slug" element={<ArticlePage />} />
         </Routes>
       </main>
     </>

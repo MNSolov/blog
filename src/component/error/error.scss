@@ -1,0 +1,34 @@
+$text-color: rgba(0, 0, 0, 75%);
+
+.error {
+    width: 940px;
+    height: 140px;
+
+    margin-left: auto;
+    margin-right: auto;
+    padding: 15px;
+
+    background-color: white;
+    box-shadow: 0 4px 12px 0 rgba($color: #000000, $alpha: 15%);
+}
+
+.error__header {
+    margin: 0;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    color: red;
+}
+
+.error_message {
+    width: 100%;
+    height: 100%;
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: $text-color;
+    overflow-wrap: break-word;
+}

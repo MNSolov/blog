@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { HeartOutlined } from '@ant-design/icons'
+import Markdown from 'react-markdown'
 import { format } from 'date-fns'
 
 import Tags from '../tag'
@@ -42,7 +43,7 @@ export default function Article({ article, isLarge }: Props) {
     classeCard.push('article-card--large')
     articleText = (
       <section className="article-card__text">
-        <p>{article.body}</p>
+        <Markdown className="article-card__text">{article.body}</Markdown>
       </section>
     )
   }
@@ -52,14 +53,14 @@ export default function Article({ article, isLarge }: Props) {
       <div className="article-card__header">
         <section className="article-card__info">
           <div className="article-card__header-info">
-            <Link to={`/article/${article.slug}`}>
+            <Link className="article-card__link" to={`/article/${article.slug}`}>
               <h2 className="article-card__title">{article.title}</h2>
             </Link>
             <HeartOutlined className="article-card__like" />
             <span className="article-card__likes-number">{article.favorited}</span>
           </div>
           <Tags tags={article.tagList} />
-          <p className="article-card__text">{article.description}</p>
+          <p className="article-card__description">{article.description}</p>
         </section>
         <section className="article-card__author-info">
           <div className="article-card__author-header">
