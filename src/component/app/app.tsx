@@ -3,8 +3,8 @@ import { Routes, Route, Link } from 'react-router-dom'
 
 import ArticleListPage from '../article-list-page'
 import ArticlePage from '../article-page'
-
 import './app.scss'
+import SignUp from '../sign-up'
 
 const limitArticleOnPage = 5
 
@@ -19,15 +19,18 @@ export default function App() {
           <button className="header-button__sing-in" type="button">
             Sing In
           </button>
-          <button className="header-button__sing-up" type="button">
-            Sing Up
-          </button>
+          <Link to="/sign-up">
+            <button className="header-button__sing-up" type="button">
+              Sing Up
+            </button>
+          </Link>
         </div>
       </header>
       <main>
         <Routes>
           <Route path="/" element={<ArticleListPage limitArticleOnPage={limitArticleOnPage} />} />
           <Route path="/article/:slug" element={<ArticlePage />} />
+          <Route path="/sign-up" element={<SignUp />} />
         </Routes>
       </main>
     </>

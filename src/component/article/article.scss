@@ -3,7 +3,8 @@ $text-color: rgba(0, 0, 0, 75%);
 $author-name-color: rgba(0, 0, 0, 85%);
 
 .article-card {
-    width: 940px;
+    max-width: min-content;
+    min-width: 940px;
     min-height: 140px;
 
     margin-left: auto;
@@ -22,7 +23,6 @@ $author-name-color: rgba(0, 0, 0, 85%);
 .article-card__info {
     flex-grow: 1.1;
     max-width: 75%;
-    // padding-right: 20px;
 }
 
 .article-card__header-info {
@@ -77,18 +77,26 @@ $author-name-color: rgba(0, 0, 0, 85%);
     font-size: 12px;
     line-height: 22px;
     color: $text-color;
-    overflow-wrap: break-word;
+    //overflow-wrap: break-word;
+    word-break: break-all;
 }
 
 .article-card__text {
-    width: 100%;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+
+    max-width: 100%;
     height: 100%;
     font-family: Inter, Arial, sans-serif;
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
     color: $text-color;
-    overflow-wrap: break-word;
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: anywhere !important;
+    white-space: wrap !important;
 }
 
 .article-card__author-info {

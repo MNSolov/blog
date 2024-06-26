@@ -1,0 +1,144 @@
+p {
+    margin: 0;
+}
+
+.form-signup {
+    box-sizing: border-box;
+    max-width: min-content;
+
+    // position: relative;
+    // z-index: 100;
+
+    // top: -60px;
+    // margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 48px 32px 48px 32px;
+
+    display: flex;
+
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    gap: 20px;
+
+    border: 1px solid #D9D9D9;
+    border-radius: 6px;
+
+    background-color: white;
+
+    box-shadow: 
+    0 1px 3px 0 rgba($color: #000000, $alpha: 2%), 
+    0 1.2px 7px 0 rgba($color: #000000, $alpha: 3%),
+    0 3px 13px 0 rgba($color: #000000, $alpha: 3.5%),
+    0 5px 23px 0 rgba($color: #000000, $alpha: 4%),
+    0 9px 44px 0 rgba($color: #000000, $alpha: 5%),
+    0 22px 106px 0 rgba($color: #000000, $alpha: 7%);
+
+    font-family: Roboto, Arial, sans-serif;
+    font-weight: 400;
+}
+
+.form-signup__header {
+    margin: 0;
+
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+
+    color: #262626;
+
+    text-align: center
+}
+
+.form-signup__label {
+    font-size: 14px;
+    line-height: 22px;
+
+    color: #262626;
+}
+
+.form-signup__input {
+    width: 320px;
+    height: 40px;
+
+    padding-left: 10px;
+
+    font-size: 16px;
+    line-height: 24px;
+
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+}
+
+.form-signup__input::placeholder {
+    font-size: 16px;
+    line-height: 24px;
+
+    color: #BFBFBF;
+}
+
+.form-signup__input:focus {
+    outline: 1px solid #1890FF;
+}
+
+.form-signup__checkbox {
+    margin: 0;
+
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 22px;
+
+    color: #595959;
+}
+
+.form-signup__button {
+    width: 320px;
+    height: 40px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    border: none;
+    border-radius: 4px;
+
+    padding: 8px 16px 8px 16px;
+
+    background-color: #1890FF;
+
+    font-size: 14px;
+    line-height: 22px;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+.form-signup__text {
+    margin: 0;
+    margin-top: 10px;
+
+    font-size: 12px;
+    line-height: 20px;
+
+    text-align: center;
+
+    color: #8C8C8C;
+}
+
+.form-signup__link {
+    color: #1890FF;
+    text-decoration: none;
+}
+
+.form-sign-up__error {
+    font-size: 14px;
+    line-height: 22px;
+    color: red;
+}
+
+div > .form-signup__checkbox {
+    border-top: 1px solid #E8E8E8;
+    padding-top: 7px;
+}
