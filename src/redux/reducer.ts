@@ -25,6 +25,12 @@ export interface State {
     is: boolean
     from: string
     status: string
+    message: string
+  }
+  user: {
+    image: string
+    username: string
+    email: string
   }
   articles: {
     articlesArray: Array<ArticleProps>
@@ -46,10 +52,16 @@ export const initState: State = {
     is: false,
     from: '',
     status: '',
+    message: '',
+  },
+  user: {
+    username: '',
+    image: '',
+    email: '',
   },
 }
 
-type Actions = UnknownAction & State['articles']
+type Actions = UnknownAction & State['articles'] & State['user']
 
 export default function mainReducer(state: State, actions: Actions) {
   if (typeof state === 'undefined') return initState
@@ -83,6 +95,26 @@ export default function mainReducer(state: State, actions: Actions) {
     result.error.status = ''
     result.error.is = false
     result.error.from = ''
+  }
+
+  if (actions.type === 'LOGOUT') {
+    result.isAuthority = false
+  }
+
+  if (actions.type === 'SIGN_UP') {
+    result.isAuthority = true
+    result.user.username = actions.username
+    result.user.email = actions.email
+    result.user.image = actions.image
+    result.isLoading = false
+  }
+
+  if (actions.type === 'EDIT_USER') {
+    result.isAuthority = true
+    result.user.username = actions.username
+    result.user.email = actions.email
+    result.user.image = actions.image
+    result.isLoading = false
   }
 
   return result

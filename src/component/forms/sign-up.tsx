@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom'
 import React, { ChangeEvent, useEffect } from 'react'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 
-import './sign-up.scss'
+import { RootState } from '../../redux/store'
+import { useAppSelector } from '../../redux/hooks'
+import './form.scss'
+import { createNewUser } from '../../redux/actions'
 
 interface IFormInput {
   firstName: string
@@ -19,7 +22,6 @@ export default function SignUp() {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
     setFocus,
     setError,
     getValues,
@@ -30,6 +32,8 @@ export default function SignUp() {
     },
   })
 
+  const { error } = useAppSelector((state: RootState) => state.state)
+
   useEffect(() => {
     setFocus('firstName')
   }, [setFocus])
@@ -37,11 +41,21 @@ export default function SignUp() {
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     if (data.password !== data.repeatPassword) {
       setError('repeatPassword', { type: 'validate', message: 'Пароли не совпадают' }, { shouldFocus: true })
+      return
     }
-    console.log(data)
+
+    const user: User = {
+      user: {
+        username: data.firstName,
+        email: data.email,
+        password: data.password,
+      },
+    }
+
+    createNewUser(user)
   }
 
-  const changeFunc = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangeHandle = (event: ChangeEvent<HTMLInputElement>) => {
     const password = getValues('password')
 
     if (password !== event.target.value) {
@@ -52,39 +66,39 @@ export default function SignUp() {
   }
 
   return (
-    <form className="form-signup" onSubmit={handleSubmit(onSubmit)}>
-      <h2 className="form-signup__header">Create a new account</h2>
-      <label htmlFor="inputName" className="form-signup__label">
+    <form className="form" onSubmit={handleSubmit(onSubmit)}>
+      <h2 className="form__header">Create a new account</h2>
+      <label htmlFor="inputName" className="form__label">
         Username
         <input
           id="inputName"
-          className="form-signup__input"
+          className="form__input"
           type="input"
           placeholder="Username"
           {...register('firstName', { required: true, minLength: 3, maxLength: 20 })}
           aria-invalid={errors.firstName ? 'true' : 'false'}
         />
         {errors.firstName?.type === 'required' && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             Это поле должно быть заполнено
           </p>
         )}
         {errors.firstName?.type === 'minLength' && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             Имя должно содержать минимум 3 символа
           </p>
         )}
         {errors.firstName?.type === 'maxLength' && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             Имя не должно быть больше 20 символов
           </p>
         )}
       </label>
-      <label htmlFor="inputEmail" className="form-signup__label">
+      <label htmlFor="inputEmail" className="form__label">
         Email address
         <input
           id="inputEmail"
-          className="form-signup__input"
+          className="form__input"
           type="email"
           placeholder="Email address"
           {...register('email', { required: true, pattern: /[a-z0-9._-]@[a-z0-9_-].[a-z0-9,2]+/ })}
@@ -92,60 +106,60 @@ export default function SignUp() {
         />
         {errors.email && <p role="alert">{errors.email.type}</p>}
       </label>
-      <label htmlFor="inputPassword" className="form-signup__label">
+      <label htmlFor="inputPassword" className="form__label">
         Password
         <input
           id="inputPassword"
-          className="form-signup__input"
+          className="form__input"
           type="password"
           placeholder="Password"
           {...register('password', { required: true, minLength: 6, maxLength: 40 })}
           aria-invalid={errors.password ? 'true' : 'false'}
         />
         {errors.password?.type === 'required' && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             Это поле должно быть заполнено
           </p>
         )}
         {errors.password?.type === 'minLength' && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             Пароль должен содержать минимум 6 символов
           </p>
         )}
         {errors.password?.type === 'maxLength' && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             Пароль не должен быть больше 40 символов
           </p>
         )}
       </label>
-      <label htmlFor="repeatPassword" className="form-signup__label">
+      <label htmlFor="repeatPassword" className="form__label">
         Repeat Password
         <input
           id="repeatPassword"
-          className="form-signup__input"
+          className="form__input"
           type="password"
           placeholder="Password"
           {...register('repeatPassword', { required: true, minLength: 6, maxLength: 40 })}
           aria-invalid={errors.repeatPassword ? 'true' : 'false'}
-          onChange={(event) => changeFunc(event)}
+          onChange={(event) => onChangeHandle(event)}
         />
         {errors.repeatPassword?.type === 'required' && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             Это поле должно быть заполнено
           </p>
         )}
         {errors.repeatPassword?.type === 'minLength' && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             Пароль должен содержать минимум 6 символов
           </p>
         )}
         {errors.repeatPassword?.type === 'maxLength' && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             Пароль не должен быть больше 40 символов
           </p>
         )}
         {errors.repeatPassword?.message && (
-          <p className="form-sign-up__error" role="alert">
+          <p className="form__error" role="alert">
             {errors.repeatPassword.message}
           </p>
         )}
@@ -158,11 +172,11 @@ export default function SignUp() {
           const { name, value, onChange, ref } = field
           return (
             <div>
-              <Checkbox className="form-signup__checkbox" name={name} checked={value} onChange={onChange} ref={ref}>
+              <Checkbox className="form__checkbox" name={name} checked={value} onChange={onChange} ref={ref}>
                 I agree to processing of my personal information
               </Checkbox>
               {errors.checkBox?.type === 'required' && (
-                <p className="form-sign-up__error" role="alert">
+                <p className="form__error" role="alert">
                   Подтвердите свое согласие на обработку персональных данных
                 </p>
               )}
@@ -171,14 +185,19 @@ export default function SignUp() {
         }}
       />
       <div>
-        <input className="form-signup__button" type="submit" value="Create" />
-        <p className="form-signup__text">
+        <input className="form__button" type="submit" value="Create" />
+        <p className="form__text">
           Already have an account?
-          <Link to="/sign-in" className="form-signup__link">
+          <Link to="/sign-in" className="form__link">
             {' Sign In'}
           </Link>
         </p>
       </div>
+      {error.from === 'createNewUser' && (
+        <p className="form__error" role="alert">
+          {error.status}
+        </p>
+      )}
     </form>
   )
 }

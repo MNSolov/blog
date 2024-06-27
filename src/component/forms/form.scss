@@ -2,7 +2,7 @@ p {
     margin: 0;
 }
 
-.form-signup {
+.form {
     box-sizing: border-box;
     max-width: min-content;
 
@@ -40,7 +40,7 @@ p {
     font-weight: 400;
 }
 
-.form-signup__header {
+.form__header {
     margin: 0;
 
     font-weight: 500;
@@ -52,14 +52,14 @@ p {
     text-align: center
 }
 
-.form-signup__label {
+.form__label {
     font-size: 14px;
     line-height: 22px;
 
     color: #262626;
 }
 
-.form-signup__input {
+.form__input {
     width: 320px;
     height: 40px;
 
@@ -72,18 +72,18 @@ p {
     border-radius: 4px;
 }
 
-.form-signup__input::placeholder {
+.form__input::placeholder {
     font-size: 16px;
     line-height: 24px;
 
     color: #BFBFBF;
 }
 
-.form-signup__input:focus {
+.form__input:focus {
     outline: 1px solid #1890FF;
 }
 
-.form-signup__checkbox {
+.form__checkbox {
     margin: 0;
 
     font-family: Roboto, Arial, sans-serif;
@@ -93,7 +93,9 @@ p {
     color: #595959;
 }
 
-.form-signup__button {
+.form__button {
+    display: block;
+    
     width: 320px;
     height: 40px;
 
@@ -115,7 +117,7 @@ p {
     cursor: pointer;
 }
 
-.form-signup__text {
+.form__text {
     margin: 0;
     margin-top: 10px;
 
@@ -127,18 +129,18 @@ p {
     color: #8C8C8C;
 }
 
-.form-signup__link {
+.form__link {
     color: #1890FF;
     text-decoration: none;
 }
 
-.form-sign-up__error {
+.form__error {
     font-size: 14px;
     line-height: 22px;
     color: red;
 }
 
-div > .form-signup__checkbox {
+div > .form__checkbox {
     border-top: 1px solid #E8E8E8;
     padding-top: 7px;
 }

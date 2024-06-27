@@ -1,0 +1,152 @@
+$heading-color: black;
+$success-color: #52C41A;
+$text-color: rgba(black, 75%);
+$author-name-color: rgba(black, 85%);
+
+.header {
+    box-sizing: border-box;
+
+    margin: 0;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+
+    width: 100%;
+    height: 80px;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: white;
+}
+
+.header__menu {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
+
+    flex-wrap: nowrap;
+    gap: 20px;
+}
+
+.header__title {
+    margin: 0;
+    display: flex;
+    /*align-items: center;*/
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    color: $heading-color;
+}
+
+.header-button__sing-up {
+    width: 110px;
+    height: 50px;
+
+    background-color: white;
+
+    border: 1px solid $success-color;
+    border-radius: 5px;
+    color: $success-color;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+
+    cursor: pointer;
+}
+
+.header-button__sing-in {
+    width: 110px;
+    height: 50px;
+
+    background-color: white;
+
+    border: none;
+    color: $heading-color;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+
+    cursor: pointer;
+
+    &:hover {
+        border: 1px solid $heading-color;
+        border-radius: 5px;
+    }
+}
+
+.header-button__create-article {
+    width: 115px;
+    height: 30px;
+
+    border: 1px solid $success-color;
+    border-radius: 5px;
+    color: $success-color;
+
+    background-color: white;
+    cursor: pointer;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.header-button__log-out {
+    
+    width: 110px;
+    height: 50px;
+
+    border: 1px solid $text-color;
+    border-radius: 5px;
+    color: $text-color;
+
+    background-color: white;
+    cursor: pointer;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+}
+
+.header__author-avatar {
+    min-width: 50px;
+    min-height: 50px;
+    border-radius: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.header__author-name {
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+
+    color: $author-name-color;
+}
+
+.header__link {
+    display: flex;
+
+    flex-wrap: nowrap;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    text-decoration: none;
+}

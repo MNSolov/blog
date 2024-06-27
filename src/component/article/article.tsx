@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 
 import Tags from '../tag'
 
-import imageAvatar from './assets/Avatar.svg'
+import defaultAvatar from './assets/Avatar.svg'
 
 import './article.scss'
 
@@ -33,7 +33,7 @@ interface Props {
 }
 
 export default function Article({ article, isLarge }: Props) {
-  const imageSrc = article.author.image ? article.author.image : imageAvatar
+  const imageSrc = article.author.image
   const classeCard: string[] = []
   classeCard.push('article-card')
 
@@ -68,7 +68,10 @@ export default function Article({ article, isLarge }: Props) {
             <p className="article-card__author-date">{format(new Date(article.createdAt), 'MMMM d, yyyy')}</p>
           </div>
           {/* <img className="article-card__author-avatar" src={imageSrc} alt="Аватар автора" /> */}
-          <div className="article-card__author-avatar" style={{ backgroundImage: `url(${imageSrc})` }} />
+          <div
+            className="article-card__author-avatar"
+            style={{ backgroundImage: `url(${imageSrc}), url(${defaultAvatar})` }}
+          />
         </section>
       </div>
       {articleText}

@@ -6,6 +6,19 @@ const { dispatch } = store
 
 const api = new ApiService()
 
+export function ErrorClear() {
+  dispatch({ type: 'ERROR_CLEAR' })
+}
+
+export function LogOut() {
+  dispatch({ type: 'LOGOUT' })
+  sessionStorage.removeItem('token')
+}
+
+export function LogIn() {
+  dispatch({ type: 'LOGIN' })
+}
+
 export function getArticles(numberPage: number, limit: number) {
   dispatch(async () => {
     dispatch({ type: 'SEND_REQUEST' })
@@ -40,6 +53,70 @@ export function getArticleBySlug(slug: string) {
   })
 }
 
-export function ErrorClear() {
-  dispatch({ type: 'ERROR_CLEAR' })
+export function createNewUser(user: User) {
+  dispatch(async () => {
+    dispatch({ type: 'SEND_REQUEST' })
+    api
+      .createNewUser(user)
+      .then((responce: ResponseCreateUser) => {
+        dispatch({
+          type: 'SIGN_UP',
+          email: responce.user.email,
+          image: responce.user.image,
+          username: responce.user.username,
+        })
+        dispatch({ type: 'ERROR_CLEAR' })
+        sessionStorage.setItem('token', responce.user.token)
+      })
+      .catch((errorResponce) => {
+        dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'createNewUser' })
+      })
+  })
+}
+
+export function loginUser(user: LoginUser) {
+  dispatch(async () => {
+    dispatch({ type: 'SEND_REQUEST' })
+    api
+      .loginUser(user)
+      .then((responce: ResponseCreateUser) => {
+        dispatch({
+          type: 'SIGN_UP',
+          email: responce.user.email,
+          image: responce.user.image,
+          username: responce.user.username,
+        })
+        dispatch({ type: 'ERROR_CLEAR' })
+        sessionStorage.setItem('token', responce.user.token)
+      })
+      .catch((errorResponce) => {
+        dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'loginUser' })
+      })
+  })
+}
+
+export function editUser(user: EditUser) {
+  dispatch(async () => {
+    dispatch({ type: 'SEND_REQUEST' })
+    api
+      .editUser(user)
+      .then((responce: ResponseCreateUser) => {
+        dispatch({
+          type: 'EDIT_USER',
+          email: responce.user.email,
+          image: responce.user.image,
+          username: responce.user.username,
+        })
+        dispatch({ type: 'ERROR_CLEAR' })
+        sessionStorage.setItem('token', responce.user.token)
+      })
+      .catch((errorResponce) => {
+        if (errorResponce.message === '401') {
+          LogOut()
+          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'editUser' })
+        } else {
+          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'editUser' })
+        }
+      })
+  })
 }
