@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import React, { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import React, { ChangeEvent, useEffect } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
 import { useAppSelector } from '../../redux/hooks'
@@ -19,9 +19,16 @@ export default function SignIn() {
     handleSubmit,
     formState: { errors },
     setFocus,
+    setError,
+    clearErrors,
   } = useForm<IFormInput>()
 
-  const { error } = useAppSelector((state: RootState) => state.state)
+  const { error, isAuthority } = useAppSelector((state: RootState) => state.state)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isAuthority) navigate('/')
+  }, [])
 
   useEffect(() => {
     setFocus('email')
@@ -35,7 +42,16 @@ export default function SignIn() {
       },
     }
 
-    loginUser(user)
+    loginUser(user, navigate, '/')
+  }
+
+  const oChangeEmailHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const regexp = /[a-z0-9._-]+@[a-z0-9_-]+\.\b[a-z]{2}\b/
+    if (!regexp.test(event.target.value)) {
+      setError('email', { type: 'pattern' })
+    } else {
+      clearErrors('email')
+    }
   }
 
   return (
@@ -48,12 +64,18 @@ export default function SignIn() {
           className="form__input"
           type="email"
           placeholder="Email addres"
-          {...register('email', { required: true })}
+          {...register('email', { required: true, pattern: /[a-z0-9._-]+@[a-z0-9_-]+\.\b[a-z]{2}\b/ })}
+          onChange={(event) => oChangeEmailHandler(event)}
           aria-invalid={errors.email ? 'true' : 'false'}
         />
         {errors.email?.type === 'required' && (
           <p className="form__error" role="alert">
             Это поле должно быть заполнено
+          </p>
+        )}
+        {errors.email?.type === 'pattern' && (
+          <p className="form__error" role="alert">
+            E-mail указан некорректно
           </p>
         )}
       </label>

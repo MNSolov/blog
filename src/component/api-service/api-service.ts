@@ -84,7 +84,7 @@ export default class ApiService {
       throw new TypeError(String(responce.json()))
     }
 
-    this.editUser = async (user: EditUser) => {
+    this.editUser = async (user: string) => {
       const url = new URL('user', 'https://blog.kata.academy/api/')
 
       const token = `Token ${sessionStorage.getItem('token')}`
@@ -95,7 +95,7 @@ export default class ApiService {
           Authorization: token,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user),
+        body: user,
       })
 
       if (responce.ok) {

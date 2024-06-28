@@ -1,5 +1,5 @@
 import { Checkbox } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import React, { ChangeEvent, useEffect } from 'react'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 
@@ -31,8 +31,13 @@ export default function SignUp() {
       checkBox: false,
     },
   })
+  const navigate = useNavigate()
 
-  const { error } = useAppSelector((state: RootState) => state.state)
+  const { error, isAuthority } = useAppSelector((state: RootState) => state.state)
+
+  useEffect(() => {
+    if (isAuthority) navigate('/')
+  }, [])
 
   useEffect(() => {
     setFocus('firstName')
@@ -52,16 +57,25 @@ export default function SignUp() {
       },
     }
 
-    createNewUser(user)
+    createNewUser(user, navigate, '/')
   }
 
-  const onChangeHandle = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChangePasswordHandle = (event: ChangeEvent<HTMLInputElement>) => {
     const password = getValues('password')
 
     if (password !== event.target.value) {
       setError('repeatPassword', { type: 'validate', message: 'Пароли не совпадают' }, { shouldFocus: true })
     } else {
       clearErrors('repeatPassword')
+    }
+  }
+
+  const oChangeEmailHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const regexp = /[a-z0-9._-]+@[a-z0-9_-]+\.\b[a-z]{2}\b/
+    if (!regexp.test(event.target.value)) {
+      setError('email', { type: 'pattern' })
+    } else {
+      clearErrors('email')
     }
   }
 
@@ -101,10 +115,19 @@ export default function SignUp() {
           className="form__input"
           type="email"
           placeholder="Email address"
-          {...register('email', { required: true, pattern: /[a-z0-9._-]@[a-z0-9_-].[a-z0-9,2]+/ })}
+          {...register('email', {
+            required: 'Это поле должно быть заполнено',
+            pattern: /[a-z0-9._-]+@[a-z0-9_-]+\.\b[a-z]{2}\b/,
+          })}
+          onChange={(event) => oChangeEmailHandler(event)}
           aria-invalid={errors.email ? 'true' : 'false'}
         />
-        {errors.email && <p role="alert">{errors.email.type}</p>}
+        {errors.email && <p role="alert">{errors.email.message}</p>}
+        {errors.email?.type === 'pattern' && (
+          <p className="form__error" role="alert">
+            E-mail указан некорректно
+          </p>
+        )}
       </label>
       <label htmlFor="inputPassword" className="form__label">
         Password
@@ -141,7 +164,7 @@ export default function SignUp() {
           placeholder="Password"
           {...register('repeatPassword', { required: true, minLength: 6, maxLength: 40 })}
           aria-invalid={errors.repeatPassword ? 'true' : 'false'}
-          onChange={(event) => onChangeHandle(event)}
+          onChange={(event) => onChangePasswordHandle(event)}
         />
         {errors.repeatPassword?.type === 'required' && (
           <p className="form__error" role="alert">

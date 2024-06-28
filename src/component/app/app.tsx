@@ -1,6 +1,8 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 
+import { useAppSelector } from '../../redux/hooks'
+import { RootState } from '../../redux/store'
 import ArticleListPage from '../article-list-page'
 import ArticlePage from '../article-page'
 import './app.scss'
@@ -12,6 +14,8 @@ import EditProfile from '../forms/edit-profile'
 const limitArticleOnPage = 5
 
 export default function App() {
+  const { isAuthority } = useAppSelector((state: RootState) => state.state)
+
   return (
     <>
       <Header />
@@ -19,8 +23,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<ArticleListPage limitArticleOnPage={limitArticleOnPage} />} />
           <Route path="/article/:slug" element={<ArticlePage />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={!isAuthority && <SignUp />} />
+          <Route path="/sign-in" element={!isAuthority && <SignIn />} />
           <Route path="/profile" element={<EditProfile />} />
         </Routes>
       </main>

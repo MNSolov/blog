@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+import React, { ChangeEvent, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
 import './form.scss'
@@ -20,35 +21,50 @@ export default function EditProfile() {
     formState: { errors },
     setFocus,
     setError,
+    clearErrors,
   } = useForm<IFormInput>()
 
-  const { error } = useAppSelector((state: RootState) => state.state)
+  const { error, isAuthority } = useAppSelector((state: RootState) => state.state)
+  const { username, image, email } = useAppSelector((state: RootState) => state.state.user)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     setFocus('firstName')
   }, [setFocus])
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    if (data.email !== '' || data.avatarImage !== '' || data.firstName !== '' || data.password !== '') {
-      const imageData = data.avatarImage === '' ? null : data.avatarImage
-      const user: EditUser = {
-        user: {
-          email: data.email,
-          password: data.password,
-          username: data.firstName,
-          image: imageData,
-        },
-      }
+  useEffect(() => {
+    if (!isAuthority) navigate('/')
+  }, [])
 
-      editUser(user)
-
-      console.log(data)
+  const oChangeEmailHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const regexp = /[a-z0-9._-]+@[a-z0-9_-]+\.\b[a-z]{2}\b/
+    if (!regexp.test(event.target.value)) {
+      setError('email', { type: 'pattern' })
     } else {
-      setError('firstName', { type: 'required', message: 'Хотя бы одно поле должно быть заполнено' })
+      clearErrors('email')
     }
   }
 
-  return (
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    let userString = '{"user":{'
+    if (data.email !== email && data.email !== '') {
+      userString += `"email":"${data.email}",`
+    }
+    if (data.firstName !== username && data.firstName !== '') {
+      userString += `"username":"${data.firstName}",`
+    }
+    if (data.avatarImage !== image) {
+      userString += `"image":"${data.avatarImage}",`
+    }
+    userString += `"password":"${data.password}"}}`
+
+    console.log(userString)
+
+    editUser(userString, navigate, '/')
+  }
+
+  const form = (
     <form className="form" onSubmit={handleSubmit(onSubmit)}>
       <h2 className="form__header">Edit Profile</h2>
       <label htmlFor="inputName" className="form__label">
@@ -58,7 +74,7 @@ export default function EditProfile() {
           className="form__input"
           type="input"
           placeholder="Username"
-          {...register('firstName', { minLength: 3, maxLength: 20 })}
+          {...register('firstName', { value: username, minLength: 3, maxLength: 20 })}
           aria-invalid={errors.firstName ? 'true' : 'false'}
         />
         {errors.firstName?.type === 'minLength' && (
@@ -79,10 +95,18 @@ export default function EditProfile() {
           className="form__input"
           type="email"
           placeholder="Email address"
-          {...register('email', { pattern: /[a-z0-9._-]@[a-z0-9_-].[a-z0-9,2]+/ })}
+          {...register('email', {
+            value: email,
+            pattern: /[a-z0-9._-]+@[a-z0-9_-]+\.\b[a-z]{2}\b/,
+          })}
+          onChange={(event) => oChangeEmailHandler(event)}
           aria-invalid={errors.email ? 'true' : 'false'}
         />
-        {errors.email && <p role="alert">{errors.email.type}</p>}
+        {errors.email?.type === 'pattern' && (
+          <p className="form__error" role="alert">
+            E-mail указан некорректно
+          </p>
+        )}
       </label>
       <label htmlFor="inputPassword" className="form__label">
         New password
@@ -91,9 +115,14 @@ export default function EditProfile() {
           className="form__input"
           type="password"
           placeholder="New password"
-          {...register('password', { minLength: 6, maxLength: 40 })}
+          {...register('password', { required: true, minLength: 6, maxLength: 40 })}
           aria-invalid={errors.password ? 'true' : 'false'}
         />
+        {errors.password?.type === 'required' && (
+          <p className="form__error" role="alert">
+            Это поле должно быть заполнено
+          </p>
+        )}
         {errors.password?.type === 'minLength' && (
           <p className="form__error" role="alert">
             Пароль должен содержать минимум 6 символов
@@ -112,7 +141,7 @@ export default function EditProfile() {
           className="form__input"
           type="input"
           placeholder="Avatar image"
-          {...register('avatarImage')}
+          {...register('avatarImage', { value: image })}
           aria-invalid={errors.avatarImage ? 'true' : 'false'}
         />
       </label>
@@ -122,11 +151,10 @@ export default function EditProfile() {
           {error.status}
         </p>
       )}
-      {errors.firstName?.type === 'required' && (
-        <p className="form__error" role="alert">
-          {errors.firstName?.message}
-        </p>
-      )}
     </form>
   )
+
+  const result = isAuthority ? form : null
+
+  return result
 }

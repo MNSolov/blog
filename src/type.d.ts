@@ -13,15 +13,6 @@ declare interface LoginUser {
   }
 }
 
-declare interface EditUser {
-  user: {
-    username: string
-    email: string
-    password: string
-    image: string | null
-  }
-}
-
 declare interface ResponseCreateUser {
   user: {
     email: string

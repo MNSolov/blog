@@ -1,3 +1,5 @@
+import { NavigateFunction } from 'react-router-dom'
+
 import ApiService from '../component/api-service'
 
 import store from './store'
@@ -53,7 +55,7 @@ export function getArticleBySlug(slug: string) {
   })
 }
 
-export function createNewUser(user: User) {
+export function createNewUser(user: User, navigate: NavigateFunction, route: string) {
   dispatch(async () => {
     dispatch({ type: 'SEND_REQUEST' })
     api
@@ -67,6 +69,7 @@ export function createNewUser(user: User) {
         })
         dispatch({ type: 'ERROR_CLEAR' })
         sessionStorage.setItem('token', responce.user.token)
+        navigate(route)
       })
       .catch((errorResponce) => {
         dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'createNewUser' })
@@ -74,7 +77,7 @@ export function createNewUser(user: User) {
   })
 }
 
-export function loginUser(user: LoginUser) {
+export function loginUser(user: LoginUser, navigate: NavigateFunction, route: string) {
   dispatch(async () => {
     dispatch({ type: 'SEND_REQUEST' })
     api
@@ -88,6 +91,7 @@ export function loginUser(user: LoginUser) {
         })
         dispatch({ type: 'ERROR_CLEAR' })
         sessionStorage.setItem('token', responce.user.token)
+        navigate(route)
       })
       .catch((errorResponce) => {
         dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'loginUser' })
@@ -95,7 +99,7 @@ export function loginUser(user: LoginUser) {
   })
 }
 
-export function editUser(user: EditUser) {
+export function editUser(user: string, navigate: NavigateFunction, route: string) {
   dispatch(async () => {
     dispatch({ type: 'SEND_REQUEST' })
     api
@@ -109,11 +113,13 @@ export function editUser(user: EditUser) {
         })
         dispatch({ type: 'ERROR_CLEAR' })
         sessionStorage.setItem('token', responce.user.token)
+        navigate(route)
       })
       .catch((errorResponce) => {
         if (errorResponce.message === '401') {
           LogOut()
           dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'editUser' })
+          navigate(route)
         } else {
           dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'editUser' })
         }
