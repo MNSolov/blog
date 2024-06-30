@@ -9,16 +9,8 @@ import { RootState } from '../../redux/store'
 import './article-list-page.scss'
 import Loader from '../loader'
 
-interface Props {
-  // articles: {
-  //   articlesArray: Array<ArticleProps>
-  //   articlesCount: number
-  // }
-  limitArticleOnPage: number
-}
-
-export default function ArticleListPage({ limitArticleOnPage }: Props) {
-  const { articles, isLoading, error } = useAppSelector((state: RootState) => state.state)
+export default function ArticleListPage() {
+  const { articles, isLoading, error, limitArticleOnPage } = useAppSelector((state: RootState) => state.state)
   const { currentPage } = useAppSelector((state: RootState) => state.state.articles)
 
   useEffect(() => {

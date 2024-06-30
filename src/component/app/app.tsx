@@ -10,8 +10,7 @@ import SignUp from '../forms/sign-up'
 import SignIn from '../forms/sign-in'
 import Header from '../header'
 import EditProfile from '../forms/edit-profile'
-
-const limitArticleOnPage = 5
+import FormArticle from '../forms/form-article'
 
 export default function App() {
   const { isAuthority } = useAppSelector((state: RootState) => state.state)
@@ -21,11 +20,12 @@ export default function App() {
       <Header />
       <main>
         <Routes>
-          <Route path="/" element={<ArticleListPage limitArticleOnPage={limitArticleOnPage} />} />
+          <Route path="/" element={<ArticleListPage />} />
           <Route path="/article/:slug" element={<ArticlePage />} />
           <Route path="/sign-up" element={!isAuthority && <SignUp />} />
           <Route path="/sign-in" element={!isAuthority && <SignIn />} />
           <Route path="/profile" element={<EditProfile />} />
+          <Route path="/new-article" element={<FormArticle createNewArticle />} />
         </Routes>
       </main>
     </>

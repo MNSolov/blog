@@ -126,3 +126,24 @@ export function editUser(user: string, navigate: NavigateFunction, route: string
       })
   })
 }
+
+export function createArticle(article: Article, navigate: NavigateFunction, route: string) {
+  dispatch(async () => {
+    dispatch({ type: 'SEND_REQUEST' })
+    api
+      .createArticle(article)
+      .then(() => {
+        dispatch({ type: 'ERROR_CLEAR' })
+        navigate(route)
+      })
+      .catch((errorResponce) => {
+        if (errorResponce.message === '401') {
+          LogOut()
+          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'createArticle' })
+          navigate(route)
+        } else {
+          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'createArticle' })
+        }
+      })
+  })
+}

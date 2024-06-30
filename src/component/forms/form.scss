@@ -70,17 +70,53 @@ p {
 
     border: 1px solid #D9D9D9;
     border-radius: 4px;
+
+    &--large {
+        width: 875px;   
+    }
+
+    &--small {
+        width: 300px;   
+    }
+
+    &:focus {
+        outline: 1px solid #1890FF;
+    }
+
+    &::placeholder {
+        font-size: 16px;
+        line-height: 24px;
+    
+        color: #BFBFBF;
+    }
 }
 
-.form__input::placeholder {
+.form__textarea {
+    width: 865px;
+    height: 170px;
+
+    padding: 10px;
+
+    font-family: Roboto, Arial, sans-serif;
+    font-weight: 400;
     font-size: 16px;
     line-height: 24px;
 
-    color: #BFBFBF;
-}
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
 
-.form__input:focus {
-    outline: 1px solid #1890FF;
+    resize: none;
+
+    &::placeholder {
+        font-size: 16px;
+        line-height: 24px;
+    
+        color: #BFBFBF;
+    }
+
+    &:focus {
+        outline: 1px solid #1890FF;
+    }
 }
 
 .form__checkbox {
@@ -115,6 +151,10 @@ p {
     color: white;
 
     cursor: pointer;
+
+    &--left {
+        margin-left: 0;
+    }
 }
 
 .form__text {
@@ -139,9 +179,75 @@ p {
     line-height: 22px;
     color: red;
     text-align: center;
+
+    &--left {
+        text-align: left;
+    }
 }
 
 div > .form__checkbox {
     border-top: 1px solid #E8E8E8;
     padding-top: 7px;
+}
+
+.form__tags-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.form__tags-list-item {
+    margin-top: 10px;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    gap: 10px;
+    width: max-content;
+}
+
+.form__add-tag {
+    margin-top: 10px;
+    width: 135px;
+    height: 40px;
+
+    border: 1px solid #1890FF;
+    border-radius: 4px;
+
+    background-color: transparent;
+
+    font-family: Roboto, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #1890FF;
+
+    cursor: pointer;
+
+    &:hover {
+        border: 2px solid #1890FF;
+    }
+}
+
+.form__delete-tag {
+    margin-right: 10px;
+    width: 120px;
+    height: 40px;
+
+    border: 1px solid #F5222D;
+    border-radius: 4px;
+
+    background-color: transparent;
+
+    font-family: Roboto, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #F5222D;
+
+    cursor: pointer;
+
+    &:hover {
+        border: 2px solid #F5222D;
+    }
 }

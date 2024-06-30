@@ -9,6 +9,8 @@ export default class ApiService {
 
   editUser
 
+  createArticle
+
   constructor() {
     this.getArticles = async (numberPage: number, limit: number) => {
       const url = new URL('articles', 'https://blog.kata.academy/api/')
@@ -56,7 +58,10 @@ export default class ApiService {
       if (responce.status === 422) {
         throw new TypeError('Не удалось зарегистрировать пользователя')
       }
-      throw new TypeError(String(responce.json()))
+      if (responce.status === 404) {
+        throw new TypeError('Неправильный запрос')
+      }
+      throw new TypeError('Что-то пошло не так')
     }
 
     this.loginUser = async (user: LoginUser) => {
@@ -81,7 +86,10 @@ export default class ApiService {
       if (responce.status === 422) {
         throw new TypeError('Не удалось авторизовать пользователя. Проверьте логин и пароль')
       }
-      throw new TypeError(String(responce.json()))
+      if (responce.status === 404) {
+        throw new TypeError('Неправильный запрос')
+      }
+      throw new TypeError('Что-то пошло не так')
     }
 
     this.editUser = async (user: string) => {
@@ -112,7 +120,42 @@ export default class ApiService {
       if (responce.status === 401) {
         throw new TypeError(String(responce.status))
       }
-      throw new TypeError(String(responce.json()))
+      if (responce.status === 404) {
+        throw new TypeError('Неправильный запрос')
+      }
+      throw new TypeError('Что-то пошло не так')
+    }
+
+    this.createArticle = async (article: Article) => {
+      const url = new URL('articles', 'https://blog.kata.academy/api/')
+
+      const token = `Token ${sessionStorage.getItem('token')}`
+
+      const responce = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(article),
+      })
+      if (responce.ok) {
+        const result = responce.json()
+        return result
+      }
+      if (responce.status === 500) {
+        throw new TypeError('Не удалось создать статью. Ошибка сервера')
+      }
+      if (responce.status === 422) {
+        throw new TypeError('Не удалось создать статью')
+      }
+      if (responce.status === 401) {
+        throw new TypeError(String(responce.status))
+      }
+      if (responce.status === 404) {
+        throw new TypeError('Неправильный запрос')
+      }
+      throw new TypeError('Что-то пошло не так')
     }
   }
 }

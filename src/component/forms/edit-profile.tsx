@@ -47,21 +47,23 @@ export default function EditProfile() {
   }
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    let userString = '{"user":{'
+    const user: EditUser = {
+      user: {
+        password: data.password,
+      },
+    }
+
     if (data.email !== email && data.email !== '') {
-      userString += `"email":"${data.email}",`
+      user.user.email = data.email
     }
     if (data.firstName !== username && data.firstName !== '') {
-      userString += `"username":"${data.firstName}",`
+      user.user.username = data.firstName
     }
     if (data.avatarImage !== image) {
-      userString += `"image":"${data.avatarImage}",`
+      user.user.image = data.avatarImage
     }
-    userString += `"password":"${data.password}"}}`
 
-    console.log(userString)
-
-    editUser(userString, navigate, '/')
+    editUser(JSON.stringify(user), navigate, '/')
   }
 
   const form = (

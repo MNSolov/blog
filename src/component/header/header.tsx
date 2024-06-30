@@ -35,7 +35,7 @@ function AuthorityMenu() {
 
   return (
     <div className="header__menu">
-      <Link to="/create-article">
+      <Link to="/new-article">
         <button className="header-button__create-article" type="button">
           Create article
         </button>

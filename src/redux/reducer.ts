@@ -19,6 +19,7 @@ export interface ArticleProps {
 
 export interface State {
   pageNumber: number
+  limitArticleOnPage: number
   isAuthority: boolean
   isLoading: boolean
   error: {
@@ -41,6 +42,7 @@ export interface State {
 
 export const initState: State = {
   pageNumber: 1,
+  limitArticleOnPage: 5,
   isAuthority: false,
   articles: {
     articlesArray: [],
