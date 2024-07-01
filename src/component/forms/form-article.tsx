@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
+import Loader from '../loader'
 import { useAppSelector } from '../../redux/hooks'
 import { RootState } from '../../redux/store'
-import { createArticle } from '../../redux/actions'
+import { createArticle, getArticleBySlug, updateArticle } from '../../redux/actions'
+import { ArticleProps } from '../../redux/reducer'
+import Error from '../error'
 import './form.scss'
 
 interface Props {
@@ -44,6 +47,16 @@ export default function FormArticle({ createNewArticle }: Props) {
     if (!isAuthority) navigate('/sign-in')
   }, [])
 
+  const { slug } = useParams()
+
+  const { articlesArray } = useAppSelector((state: RootState) => state.state.articles)
+
+  const articleEdit = articlesArray.find((item: ArticleProps) => item.slug === slug)
+
+  const title: undefined | string = typeof articleEdit !== 'undefined' ? articleEdit.title : undefined
+  const description: undefined | string = typeof articleEdit !== 'undefined' ? articleEdit.description : undefined
+  const body: undefined | string = typeof articleEdit !== 'undefined' ? articleEdit.body : undefined
+
   const header = createNewArticle ? 'Create new article' : 'Edit article'
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
@@ -62,8 +75,11 @@ export default function FormArticle({ createNewArticle }: Props) {
     if (typeof data.tag !== 'undefined') {
       article.article.tagList = [...data.tag]
     }
-
-    createArticle(article, navigate, '/')
+    if (createNewArticle) {
+      createArticle(article, navigate, '/')
+    } else {
+      updateArticle(article, slug, navigate, '/')
+    }
   }
 
   const onDelete = (index: number) => {
@@ -135,6 +151,43 @@ export default function FormArticle({ createNewArticle }: Props) {
     }
   }
 
+  const newTagsInput: TagInput[] = []
+  articleEdit?.tagList.forEach((item: string) => {
+    count.current += 1
+    const onDeleteWithIndex = onDelete(count.current)
+    if (String(item) !== 'null') {
+      newTagsInput.push({
+        id: count.current,
+        tag: (
+          <li key={count.current} className="form__tags-list-item">
+            <input
+              id="inpuTags"
+              className="form__input form__input--small"
+              type="input"
+              placeholder="Tag"
+              {...register(`tag.${count.current}`, { value: item })}
+              onChange={(event) => onChangeHandler(event)}
+              aria-invalid={errors.title ? 'true' : 'false'}
+            />
+            <button
+              type="button"
+              className="form__delete-tag"
+              onClick={() => {
+                onDeleteWithIndex()
+              }}
+            >
+              Delete tag
+            </button>
+          </li>
+        ),
+      })
+    }
+  })
+
+  useEffect(() => {
+    setTags(newTagsInput)
+  }, [])
+
   const arrayTagInputs = tagInputs.map((item) => item.tag)
 
   return (
@@ -147,7 +200,7 @@ export default function FormArticle({ createNewArticle }: Props) {
           className="form__input form__input--large"
           type="input"
           placeholder="Title"
-          {...register('title', { required: true })}
+          {...register('title', { required: true, value: title })}
           aria-invalid={errors.title ? 'true' : 'false'}
         />
         {errors.title?.type === 'required' && (
@@ -163,7 +216,7 @@ export default function FormArticle({ createNewArticle }: Props) {
           className="form__input form__input--large"
           type="input"
           placeholder="Description"
-          {...register('description', { required: true })}
+          {...register('description', { required: true, value: description })}
           aria-invalid={errors.title ? 'true' : 'false'}
         />
         {errors.description?.type === 'required' && (
@@ -178,7 +231,7 @@ export default function FormArticle({ createNewArticle }: Props) {
           id="inputText"
           className="form__textarea"
           placeholder="Text"
-          {...register('text', { required: true })}
+          {...register('text', { required: true, value: body })}
           aria-invalid={errors.title ? 'true' : 'false'}
         />
         {errors.text?.type === 'required' && (

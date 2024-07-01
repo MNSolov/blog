@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Pagination } from 'antd'
 
 import Article from '../article'
@@ -12,6 +12,7 @@ import Loader from '../loader'
 export default function ArticleListPage() {
   const { articles, isLoading, error, limitArticleOnPage } = useAppSelector((state: RootState) => state.state)
   const { currentPage } = useAppSelector((state: RootState) => state.state.articles)
+  const ref = useRef(0)
 
   useEffect(() => {
     if (articles.articlesCount === 0 && isLoading === false && error.from !== 'getArticles') {
@@ -19,16 +20,16 @@ export default function ArticleListPage() {
       getArticles(currentPage, limitArticleOnPage)
     }
   })
+
   let articleList = null
 
   let result: null | JSX.Element = isLoading ? <Loader /> : null
 
   if (articles.articlesArray.length > 0) {
-    articleList = articles.articlesArray.map((item: ArticleProps) => (
-      <Article key={Math.random()} article={item} isLarge={false} />
-    ))
-  } else {
-    articleList = null
+    articleList = articles.articlesArray.map((item: ArticleProps) => {
+      ref.current += 1
+      return <Article key={ref.current} article={item} isLarge={false} />
+    })
   }
 
   const paginationChange = (event: number) => {

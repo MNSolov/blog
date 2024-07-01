@@ -11,6 +11,10 @@ export default class ApiService {
 
   createArticle
 
+  deleteArticle
+
+  updateArticle
+
   constructor() {
     this.getArticles = async (numberPage: number, limit: number) => {
       const url = new URL('articles', 'https://blog.kata.academy/api/')
@@ -148,6 +152,67 @@ export default class ApiService {
       }
       if (responce.status === 422) {
         throw new TypeError('Не удалось создать статью')
+      }
+      if (responce.status === 401) {
+        throw new TypeError(String(responce.status))
+      }
+      if (responce.status === 404) {
+        throw new TypeError('Неправильный запрос')
+      }
+      throw new TypeError('Что-то пошло не так')
+    }
+
+    this.deleteArticle = async (slug: string) => {
+      const url = new URL(`articles/${slug}`, 'https://blog.kata.academy/api/')
+
+      const token = `Token ${sessionStorage.getItem('token')}`
+
+      const responce = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          Authorization: token,
+        },
+      })
+      if (responce.status === 204) {
+        return
+      }
+      if (responce.status === 500) {
+        throw new TypeError('Не удалось удалить статью. Ошибка сервера')
+      }
+      if (responce.status === 422) {
+        throw new TypeError('Не удалось удалить статью')
+      }
+      if (responce.status === 401) {
+        throw new TypeError(String(responce.status))
+      }
+      if (responce.status === 404) {
+        throw new TypeError('Страница не найдена')
+      }
+      throw new TypeError('Что-то пошло не так')
+    }
+
+    this.updateArticle = async (article: Article, slug: string | undefined) => {
+      const url = new URL(`articles/${slug}`, 'https://blog.kata.academy/api/')
+
+      const token = `Token ${sessionStorage.getItem('token')}`
+
+      const responce = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(article),
+      })
+      if (responce.ok) {
+        const result = responce.json()
+        return result
+      }
+      if (responce.status === 500) {
+        throw new TypeError('Не удалось обновить статью. Ошибка сервера')
+      }
+      if (responce.status === 422) {
+        throw new TypeError('Не удалось обновить статью')
       }
       if (responce.status === 401) {
         throw new TypeError(String(responce.status))

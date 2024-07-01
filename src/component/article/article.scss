@@ -105,6 +105,7 @@ $author-name-color: rgba(0, 0, 0, 85%);
 
     justify-content: flex-end;
     align-items: flex-start;
+    margin-bottom: 10px;
 }
 
 .article-card__author-header {
@@ -147,4 +148,36 @@ $author-name-color: rgba(0, 0, 0, 85%);
 
 .article-card__link {
     text-decoration: none;
+}
+
+.article-card__button {
+    margin-left: 20px;
+    width: 65px;
+    height: 30px;
+
+    font-family: Inter, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+
+    border-radius: 5px;
+    background-color: transparent;
+
+    cursor: pointer;
+
+    &--edit {
+        color: #52C41A;
+        border: 1px solid #52C41A;
+        &:hover {
+            border: 2px solid #52C41A;
+        }
+    }
+
+    &--delete {
+        color: #F5222D;
+        border: 1px solid #F5222D;
+        &:hover {
+            border: 2px solid #F5222D;
+        }
+    }
 }

@@ -21,6 +21,10 @@ export function LogIn() {
   dispatch({ type: 'LOGIN' })
 }
 
+export function clearArticles() {
+  dispatch({ type: 'CLEAR_ARTICLES' })
+}
+
 export function getArticles(numberPage: number, limit: number) {
   dispatch(async () => {
     dispatch({ type: 'SEND_REQUEST' })
@@ -134,6 +138,8 @@ export function createArticle(article: Article, navigate: NavigateFunction, rout
       .createArticle(article)
       .then(() => {
         dispatch({ type: 'ERROR_CLEAR' })
+        dispatch({ type: 'GET_RESPONSE' })
+        clearArticles()
         navigate(route)
       })
       .catch((errorResponce) => {
@@ -143,6 +149,52 @@ export function createArticle(article: Article, navigate: NavigateFunction, rout
           navigate(route)
         } else {
           dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'createArticle' })
+        }
+      })
+  })
+}
+
+export function deleteArticle(slug: string, navigate: NavigateFunction, route: string) {
+  dispatch(async () => {
+    dispatch({ type: 'SEND_REQUEST' })
+    api
+      .deleteArticle(slug)
+      .then(() => {
+        dispatch({ type: 'ERROR_CLEAR' })
+        dispatch({ type: 'GET_RESPONSE' })
+        clearArticles()
+        navigate(route)
+      })
+      .catch((errorResponce) => {
+        if (errorResponce.message === '401') {
+          LogOut()
+          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'deleteArticle' })
+          navigate(route)
+        } else {
+          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'deleteArticle' })
+        }
+      })
+  })
+}
+
+export function updateArticle(article: Article, slug: string | undefined, navigate: NavigateFunction, route: string) {
+  dispatch(async () => {
+    dispatch({ type: 'SEND_REQUEST' })
+    api
+      .updateArticle(article, slug)
+      .then(() => {
+        dispatch({ type: 'ERROR_CLEAR' })
+        dispatch({ type: 'GET_RESPONSE' })
+        clearArticles()
+        navigate(route)
+      })
+      .catch((errorResponce) => {
+        if (errorResponce.message === '401') {
+          LogOut()
+          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'deleteArticle' })
+          navigate(route)
+        } else {
+          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'deleteArticle' })
         }
       })
   })

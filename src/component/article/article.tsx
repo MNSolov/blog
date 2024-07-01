@@ -1,14 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { HeartOutlined } from '@ant-design/icons'
 import Markdown from 'react-markdown'
 import { format } from 'date-fns'
+import { message, Popconfirm, PopconfirmProps } from 'antd'
 
 import Tags from '../tag'
+import './article.scss'
+import { useAppSelector } from '../../redux/hooks'
+import { RootState } from '../../redux/store'
+import { deleteArticle, ErrorClear } from '../../redux/actions'
 
 import defaultAvatar from './assets/Avatar.svg'
-
-import './article.scss'
 
 interface ArticleProps {
   author: {
@@ -32,7 +35,35 @@ interface Props {
   isLarge: boolean
 }
 
+function textClamp(text: string, symbols: number): string {
+  let result = text
+
+  if (typeof text === 'undefined') return ''
+
+  if (result.length > symbols) {
+    const words: string[] = text.split(/\s/g)
+    result = ''
+    if (words.length === 1 && words[0].length > symbols) {
+      for (let i = 0; i < symbols; i += 1) {
+        result += words[0][i]
+      }
+    } else {
+      let i = 0
+      while (result.length + words[i].length < symbols) {
+        result += `${words[i]} `
+        i += 1
+      }
+      result = result.trim()
+    }
+    result += '...'
+  }
+  return result
+}
+
 export default function Article({ article, isLarge }: Props) {
+  const { user, error, isAuthority } = useAppSelector((state: RootState) => state.state)
+  const navigate = useNavigate()
+
   const imageSrc = article.author.image
   const classeCard: string[] = []
   classeCard.push('article-card')
@@ -48,30 +79,66 @@ export default function Article({ article, isLarge }: Props) {
     )
   }
 
+  if (error.from === 'deleteArticle') {
+    message.error(error.status)
+    ErrorClear()
+  }
+
+  const confirm: PopconfirmProps['onConfirm'] = () => {
+    deleteArticle(article.slug, navigate, '/')
+  }
+
+  let editMenu: null | JSX.Element = null
+  if (isLarge && user.username === article.author.username && isAuthority) {
+    editMenu = (
+      <div className="article-card__edit-menu">
+        <Link to={`/articles/${article.slug}/edit`}>
+          <button className="article-card__button article-card__button--edit" type="button">
+            Edit
+          </button>
+        </Link>
+        <Popconfirm
+          title="Delete the article"
+          description="Are you sure to delete this article?"
+          onConfirm={confirm}
+          okText="Yes"
+          cancelText="No"
+          placement="right"
+        >
+          <button className="article-card__button article-card__button--delete" type="button">
+            Delete
+          </button>
+        </Popconfirm>
+      </div>
+    )
+  }
+
   return (
     <section className={classeCard.join(' ')}>
       <div className="article-card__header">
         <section className="article-card__info">
           <div className="article-card__header-info">
             <Link className="article-card__link" to={`/article/${article.slug}`}>
-              <h2 className="article-card__title">{article.title}</h2>
+              <h2 className="article-card__title">{textClamp(article.title, 100)}</h2>
             </Link>
             <HeartOutlined className="article-card__like" />
             <span className="article-card__likes-number">{article.favorited}</span>
           </div>
           <Tags tags={article.tagList} />
-          <p className="article-card__description">{article.description}</p>
+          <p className="article-card__description">{textClamp(article.description, 100)}</p>
         </section>
-        <section className="article-card__author-info">
-          <div className="article-card__author-header">
-            <p className="article-card__author-name">{article.author.username}</p>
-            <p className="article-card__author-date">{format(new Date(article.createdAt), 'MMMM d, yyyy')}</p>
+        <section>
+          <div className="article-card__author-info">
+            <div className="article-card__author-header">
+              <p className="article-card__author-name">{article.author.username}</p>
+              <p className="article-card__author-date">{format(new Date(article.createdAt), 'MMMM d, yyyy')}</p>
+            </div>
+            <div
+              className="article-card__author-avatar"
+              style={{ backgroundImage: `url(${imageSrc}), url(${defaultAvatar})` }}
+            />
           </div>
-          {/* <img className="article-card__author-avatar" src={imageSrc} alt="Аватар автора" /> */}
-          <div
-            className="article-card__author-avatar"
-            style={{ backgroundImage: `url(${imageSrc}), url(${defaultAvatar})` }}
-          />
+          {editMenu}
         </section>
       </div>
       {articleText}

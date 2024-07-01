@@ -26,6 +26,7 @@ export default function App() {
           <Route path="/sign-in" element={!isAuthority && <SignIn />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/new-article" element={<FormArticle createNewArticle />} />
+          <Route path="/articles/:slug/edit" element={<FormArticle createNewArticle={false} />} />
         </Routes>
       </main>
     </>

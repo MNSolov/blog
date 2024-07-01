@@ -26,7 +26,6 @@ export interface State {
     is: boolean
     from: string
     status: string
-    message: string
   }
   user: {
     image: string
@@ -54,7 +53,6 @@ export const initState: State = {
     is: false,
     from: '',
     status: '',
-    message: '',
   },
   user: {
     username: '',
@@ -72,6 +70,10 @@ export default function mainReducer(state: State, actions: Actions) {
 
   if (actions.type === 'SEND_REQUEST') {
     result.isLoading = true
+  }
+
+  if (actions.type === 'GET_RESPONSE') {
+    result.isLoading = false
   }
 
   if (actions.type === 'GET_ARTICLES') {
@@ -99,8 +101,15 @@ export default function mainReducer(state: State, actions: Actions) {
     result.error.from = ''
   }
 
+  if (actions.type === 'CLEAR_ARTICLES') {
+    result.articles.articlesCount = 0
+  }
+
   if (actions.type === 'LOGOUT') {
     result.isAuthority = false
+    result.user.email = ''
+    result.user.image = ''
+    result.user.username = ''
   }
 
   if (actions.type === 'SIGN_UP') {
