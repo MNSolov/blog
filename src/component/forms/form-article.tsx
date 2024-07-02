@@ -108,6 +108,12 @@ export default function FormArticle({ createNewArticle }: Props) {
     if (event.target.value !== '') {
       setEmptyTagError('')
     }
+    if (event.target.value.length > 20) {
+      setEmptyTagError('Должно быть не больше 20 символов')
+    }
+    if (event.target.value.length === 0) {
+      setEmptyTagError('Все поля должны быть заполнены')
+    }
   }
 
   const createInputTag = (id: number, item?: string) => {
@@ -121,7 +127,7 @@ export default function FormArticle({ createNewArticle }: Props) {
             className="form__input form__input--small"
             type="input"
             placeholder="Tag"
-            {...register(`tag.${id}`, { value: item, maxLength: 20 })}
+            {...register(`tag.${id}`, { required: true, value: item, maxLength: 20 })}
             onChange={(event) => onChangeHandler(event)}
           />
           <button
@@ -186,6 +192,11 @@ export default function FormArticle({ createNewArticle }: Props) {
             Это поле должно быть заполнено
           </p>
         )}
+        {errors.title?.type === 'maxLength' && (
+          <p className="form__error" role="alert">
+            Должно быть больше 100 символов
+          </p>
+        )}
       </label>
       <label htmlFor="inpuDescription" className="form__label">
         Description
@@ -200,6 +211,11 @@ export default function FormArticle({ createNewArticle }: Props) {
         {errors.description?.type === 'required' && (
           <p className="form__error" role="alert">
             Это поле должно быть заполнено
+          </p>
+        )}
+        {errors.description?.type === 'maxLength' && (
+          <p className="form__error" role="alert">
+            Должно быть больше 100 символов
           </p>
         )}
       </label>
