@@ -2,12 +2,11 @@ import React, { useState, useEffect, useRef, ChangeEvent } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import Loader from '../loader'
 import { useAppSelector } from '../../redux/hooks'
 import { RootState } from '../../redux/store'
-import { createArticle, getArticleBySlug, updateArticle } from '../../redux/actions'
+import { createArticle, updateArticle } from '../../redux/actions'
 import { ArticleProps } from '../../redux/reducer'
-import Error from '../error'
+
 import './form.scss'
 
 interface Props {
@@ -45,7 +44,7 @@ export default function FormArticle({ createNewArticle }: Props) {
 
   useEffect(() => {
     if (!isAuthority) navigate('/sign-in')
-  }, [])
+  })
 
   const { slug } = useParams()
 
@@ -82,7 +81,7 @@ export default function FormArticle({ createNewArticle }: Props) {
     }
   }
 
-  const onDelete = (index: number) => {
+  const onDeleteInputTag = (index: number) => {
     return () => {
       setTags((value) => {
         let result: TagInput[] = []
@@ -111,38 +110,54 @@ export default function FormArticle({ createNewArticle }: Props) {
     }
   }
 
+  const createInputTag = (id: number, item?: string) => {
+    const onDeleteWithIndex = onDeleteInputTag(id)
+    return {
+      id,
+      tag: (
+        <li key={id} className="form__tags-list-item">
+          <input
+            id="inpuTags"
+            className="form__input form__input--small"
+            type="input"
+            placeholder="Tag"
+            {...register(`tag.${id}`, { value: item, maxLength: 20 })}
+            onChange={(event) => onChangeHandler(event)}
+          />
+          <button
+            type="button"
+            className="form__delete-tag"
+            onClick={() => {
+              onDeleteWithIndex()
+            }}
+          >
+            Delete tag
+          </button>
+        </li>
+      ),
+    }
+  }
+
+  const newTagsInput: TagInput[] = []
+
+  useEffect(() => {
+    if (newTagsInput.length === 0) {
+      articleEdit?.tagList.forEach((item: string) => {
+        if (String(item) !== 'null') {
+          count.current += 1
+          newTagsInput.push(createInputTag(count.current, item))
+        }
+      })
+      setTags(newTagsInput)
+    }
+  }, [])
+
   const onAddButtonClick = () => {
     if (getValues(`tag.${count.current}`) !== '') {
       setEmptyTagError('')
       count.current += 1
       setTags((value) => {
-        const onDeleteWithIndex = onDelete(count.current)
-        const newElem: TagInput = {
-          id: count.current,
-          tag: (
-            <li key={count.current} className="form__tags-list-item">
-              <input
-                id="inpuTags"
-                className="form__input form__input--small"
-                type="input"
-                placeholder="Tag"
-                {...register(`tag.${count.current}`)}
-                onChange={(event) => onChangeHandler(event)}
-                aria-invalid={errors.title ? 'true' : 'false'}
-              />
-              <button
-                type="button"
-                className="form__delete-tag"
-                onClick={() => {
-                  onDeleteWithIndex()
-                }}
-              >
-                Delete tag
-              </button>
-            </li>
-          ),
-        }
-        const result = [...value, newElem]
+        const result = [...value, createInputTag(count.current)]
 
         return result
       })
@@ -150,43 +165,6 @@ export default function FormArticle({ createNewArticle }: Props) {
       setEmptyTagError('Заполните это поле, прежде чем добавлять новое')
     }
   }
-
-  const newTagsInput: TagInput[] = []
-  articleEdit?.tagList.forEach((item: string) => {
-    count.current += 1
-    const onDeleteWithIndex = onDelete(count.current)
-    if (String(item) !== 'null') {
-      newTagsInput.push({
-        id: count.current,
-        tag: (
-          <li key={count.current} className="form__tags-list-item">
-            <input
-              id="inpuTags"
-              className="form__input form__input--small"
-              type="input"
-              placeholder="Tag"
-              {...register(`tag.${count.current}`, { value: item })}
-              onChange={(event) => onChangeHandler(event)}
-              aria-invalid={errors.title ? 'true' : 'false'}
-            />
-            <button
-              type="button"
-              className="form__delete-tag"
-              onClick={() => {
-                onDeleteWithIndex()
-              }}
-            >
-              Delete tag
-            </button>
-          </li>
-        ),
-      })
-    }
-  })
-
-  useEffect(() => {
-    setTags(newTagsInput)
-  }, [])
 
   const arrayTagInputs = tagInputs.map((item) => item.tag)
 
@@ -200,7 +178,7 @@ export default function FormArticle({ createNewArticle }: Props) {
           className="form__input form__input--large"
           type="input"
           placeholder="Title"
-          {...register('title', { required: true, value: title })}
+          {...register('title', { required: true, value: title, maxLength: 100 })}
           aria-invalid={errors.title ? 'true' : 'false'}
         />
         {errors.title?.type === 'required' && (
@@ -216,7 +194,7 @@ export default function FormArticle({ createNewArticle }: Props) {
           className="form__input form__input--large"
           type="input"
           placeholder="Description"
-          {...register('description', { required: true, value: description })}
+          {...register('description', { required: true, value: description, maxLength: 100 })}
           aria-invalid={errors.title ? 'true' : 'false'}
         />
         {errors.description?.type === 'required' && (

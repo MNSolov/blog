@@ -199,3 +199,53 @@ export function updateArticle(article: Article, slug: string | undefined, naviga
       })
   })
 }
+
+export function setLike(slug: string, navigate: NavigateFunction, route: string) {
+  dispatch(async () => {
+    dispatch({ type: 'SEND_REQUEST' })
+    api
+      .setLike(slug)
+      .then((response) => {
+        dispatch({ type: 'ERROR_CLEAR' })
+        dispatch({ type: 'GET_RESPONSE' })
+        dispatch({
+          type: 'UPDATE',
+          article: response.article,
+        })
+      })
+      .catch((errorResponce) => {
+        if (errorResponce.message === '401') {
+          LogOut()
+          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'createArticle' })
+          navigate(route)
+        } else {
+          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'createArticle' })
+        }
+      })
+  })
+}
+
+export function deleteLike(slug: string, navigate: NavigateFunction, route: string) {
+  dispatch(async () => {
+    dispatch({ type: 'SEND_REQUEST' })
+    api
+      .deleteLike(slug)
+      .then((response) => {
+        dispatch({ type: 'ERROR_CLEAR' })
+        dispatch({ type: 'GET_RESPONSE' })
+        dispatch({
+          type: 'UPDATE',
+          article: response.article,
+        })
+      })
+      .catch((errorResponce) => {
+        if (errorResponce.message === '401') {
+          LogOut()
+          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'createArticle' })
+          navigate(route)
+        } else {
+          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'createArticle' })
+        }
+      })
+  })
+}

@@ -15,12 +15,33 @@ export default class ApiService {
 
   updateArticle
 
+  setLike
+
+  deleteLike
+
   constructor() {
     this.getArticles = async (numberPage: number, limit: number) => {
       const url = new URL('articles', 'https://blog.kata.academy/api/')
+
       url.searchParams.set('limit', String(limit))
       url.searchParams.set('offset', String(limit * (numberPage || 0)))
-      const responce = await fetch(url)
+
+      let responce: Response
+      let token = ''
+
+      if (sessionStorage.getItem('token')) {
+        token = `Token ${sessionStorage.getItem('token')}`
+
+        responce = await fetch(url, {
+          method: 'GET',
+          headers: {
+            Authorization: token,
+          },
+        })
+      } else {
+        responce = await fetch(url)
+      }
+
       if (responce.ok) {
         const result = responce.json()
         return result
@@ -31,7 +52,21 @@ export default class ApiService {
     this.getArticleBySlug = async (slug: string) => {
       const url = new URL(`articles/${slug}`, 'https://blog.kata.academy/api/')
 
-      const responce = await fetch(url)
+      let responce: Response
+      let token = ''
+
+      if (sessionStorage.getItem('token')) {
+        token = `Token ${sessionStorage.getItem('token')}`
+
+        responce = await fetch(url, {
+          method: 'GET',
+          headers: {
+            Authorization: token,
+          },
+        })
+      } else {
+        responce = await fetch(url)
+      }
 
       if (responce.ok) {
         const result = responce.json()
@@ -213,6 +248,66 @@ export default class ApiService {
       }
       if (responce.status === 422) {
         throw new TypeError('Не удалось обновить статью')
+      }
+      if (responce.status === 401) {
+        throw new TypeError(String(responce.status))
+      }
+      if (responce.status === 404) {
+        throw new TypeError('Неправильный запрос')
+      }
+      throw new TypeError('Что-то пошло не так')
+    }
+
+    this.setLike = async (slug: string) => {
+      const url = new URL(`articles/${slug}/favorite`, 'https://blog.kata.academy/api/')
+
+      const token = `Token ${sessionStorage.getItem('token')}`
+
+      const responce = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: token,
+        },
+      })
+      if (responce.ok) {
+        const result = responce.json()
+        return result
+      }
+      if (responce.status === 500) {
+        throw new TypeError('Не удалось создать статью. Ошибка сервера')
+      }
+      if (responce.status === 422) {
+        throw new TypeError('Не удалось создать статью')
+      }
+      if (responce.status === 401) {
+        throw new TypeError(String(responce.status))
+      }
+      if (responce.status === 404) {
+        throw new TypeError('Неправильный запрос')
+      }
+      throw new TypeError('Что-то пошло не так')
+    }
+
+    this.deleteLike = async (slug: string) => {
+      const url = new URL(`articles/${slug}/favorite`, 'https://blog.kata.academy/api/')
+
+      const token = `Token ${sessionStorage.getItem('token')}`
+
+      const responce = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          Authorization: token,
+        },
+      })
+      if (responce.ok) {
+        const result = responce.json()
+        return result
+      }
+      if (responce.status === 500) {
+        throw new TypeError('Не удалось создать статью. Ошибка сервера')
+      }
+      if (responce.status === 422) {
+        throw new TypeError('Не удалось создать статью')
       }
       if (responce.status === 401) {
         throw new TypeError(String(responce.status))

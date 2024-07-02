@@ -17,6 +17,10 @@ export interface ArticleProps {
   updatedAt: string
 }
 
+type Article = {
+  article: ArticleProps
+}
+
 export interface State {
   pageNumber: number
   limitArticleOnPage: number
@@ -61,7 +65,7 @@ export const initState: State = {
   },
 }
 
-type Actions = UnknownAction & State['articles'] & State['user']
+type Actions = UnknownAction & State['articles'] & State['user'] & Article
 
 export default function mainReducer(state: State, actions: Actions) {
   if (typeof state === 'undefined') return initState
@@ -126,6 +130,14 @@ export default function mainReducer(state: State, actions: Actions) {
     result.user.email = actions.email
     result.user.image = actions.image
     result.isLoading = false
+  }
+
+  if (actions.type === 'UPDATE') {
+    const index = result.articles.articlesArray.findIndex((item: ArticleProps) => item.slug === actions.article.slug)
+    if (index > -1) {
+      result.articles.articlesArray[index].favorited = actions.article.favorited
+      result.articles.articlesArray[index].favoritesCount = actions.article.favoritesCount
+    }
   }
 
   return result

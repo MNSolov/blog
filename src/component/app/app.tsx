@@ -11,6 +11,7 @@ import SignIn from '../forms/sign-in'
 import Header from '../header'
 import EditProfile from '../forms/edit-profile'
 import FormArticle from '../forms/form-article'
+import Error from '../error'
 
 export default function App() {
   const { isAuthority } = useAppSelector((state: RootState) => state.state)
@@ -20,6 +21,7 @@ export default function App() {
       <Header />
       <main>
         <Routes>
+          <Route path="*" element={<Error message="Страница не найдена" />} />
           <Route path="/" element={<ArticleListPage />} />
           <Route path="/article/:slug" element={<ArticlePage />} />
           <Route path="/sign-up" element={!isAuthority && <SignUp />} />

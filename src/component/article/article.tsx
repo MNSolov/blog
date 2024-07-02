@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { HeartOutlined } from '@ant-design/icons'
 import Markdown from 'react-markdown'
 import { format } from 'date-fns'
 import { message, Popconfirm, PopconfirmProps } from 'antd'
 
 import Tags from '../tag'
+import Like from '../like'
 import './article.scss'
 import { useAppSelector } from '../../redux/hooks'
 import { RootState } from '../../redux/store'
@@ -25,7 +25,7 @@ interface ArticleProps {
   favorited: boolean
   favoritesCount: number
   slug: string
-  tagList: Array<string>
+  tagList: Array<string | null>
   title: string
   updatedAt: string
 }
@@ -69,6 +69,16 @@ export default function Article({ article, isLarge }: Props) {
   classeCard.push('article-card')
 
   let articleText = null
+
+  const tagListClamp: string[] = []
+
+  if (article.tagList.length > 0) {
+    article.tagList.forEach((item) => {
+      if (typeof item === 'string') {
+        tagListClamp.push(textClamp(item, 20))
+      }
+    })
+  }
 
   if (isLarge) {
     classeCard.push('article-card--large')
@@ -121,10 +131,10 @@ export default function Article({ article, isLarge }: Props) {
             <Link className="article-card__link" to={`/article/${article.slug}`}>
               <h2 className="article-card__title">{textClamp(article.title, 100)}</h2>
             </Link>
-            <HeartOutlined className="article-card__like" />
-            <span className="article-card__likes-number">{article.favorited}</span>
+            <Like isAuthority={isAuthority} isFavorited={article.favorited} slug={article.slug} />
+            <span className="article-card__likes-number">{article.favoritesCount}</span>
           </div>
-          <Tags tags={article.tagList} />
+          <Tags tags={tagListClamp} />
           <p className="article-card__description">{textClamp(article.description, 100)}</p>
         </section>
         <section>

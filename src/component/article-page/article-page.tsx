@@ -11,10 +11,6 @@ import Error from '../error'
 
 import './article-page.scss'
 
-// interface Props {
-//   articles: Array<ArticleProps>
-// }
-
 export default function ArticlePage() {
   const { slug } = useParams()
   const { isLoading, error } = useAppSelector((state: RootState) => state.state)
