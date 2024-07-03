@@ -1,1 +1,1 @@
-https://blog-app-three-wine.vercel.app/
+https://blog-app-topaz-delta.vercel.app/
