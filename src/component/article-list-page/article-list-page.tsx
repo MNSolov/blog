@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { Pagination } from 'antd'
+import { useNavigate } from 'react-router-dom'
 
 import Article from '../article'
 import { ArticleProps } from '../../redux/reducer'
@@ -14,12 +15,18 @@ export default function ArticleListPage() {
   const { currentPage } = useAppSelector((state: RootState) => state.state.articles)
   const ref = useRef(0)
 
+  const navigate = useNavigate()
+
   useEffect(() => {
     if (articles.articlesCount === 0 && isLoading === false && error.from !== 'getArticles') {
       ErrorClear()
       getArticles(currentPage, limitArticleOnPage)
     }
   })
+
+  if (articles.articlesCount === 0 && isLoading === false && error.from === 'getArticles') {
+    navigate('/error')
+  }
 
   let articleList = null
 

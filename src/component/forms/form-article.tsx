@@ -249,7 +249,7 @@ export default function FormArticle({ createNewArticle }: Props) {
         </ul>
       </div>
       <input className="form__button form__button--left" type="submit" value="Send" />
-      {error.from === 'createArticle' && (
+      {(error.from === 'createArticle' || error.from === 'updateArticle') && (
         <p className="form__error" role="alert">
           {error.status}
         </p>

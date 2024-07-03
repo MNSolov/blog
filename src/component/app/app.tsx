@@ -29,6 +29,7 @@ export default function App() {
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/new-article" element={<FormArticle createNewArticle />} />
           <Route path="/articles/:slug/edit" element={<FormArticle createNewArticle={false} />} />
+          <Route path="/error" element={<Error message="Что-то пошло не так" />} />
         </Routes>
       </main>
     </>

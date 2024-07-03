@@ -191,10 +191,10 @@ export function updateArticle(article: Article, slug: string | undefined, naviga
       .catch((errorResponce) => {
         if (errorResponce.message === '401') {
           LogOut()
-          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'deleteArticle' })
+          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'updateArticle' })
           navigate(route)
         } else {
-          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'deleteArticle' })
+          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'updateArticle' })
         }
       })
   })
@@ -216,10 +216,10 @@ export function setLike(slug: string, navigate: NavigateFunction, route: string)
       .catch((errorResponce) => {
         if (errorResponce.message === '401') {
           LogOut()
-          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'createArticle' })
+          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'setLike' })
           navigate(route)
         } else {
-          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'createArticle' })
+          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'setLike' })
         }
       })
   })
@@ -241,10 +241,10 @@ export function deleteLike(slug: string, navigate: NavigateFunction, route: stri
       .catch((errorResponce) => {
         if (errorResponce.message === '401') {
           LogOut()
-          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'createArticle' })
+          dispatch({ type: 'GET_ERROR', error: 'Ошибка авторизации', from: 'deleteLike' })
           navigate(route)
         } else {
-          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'createArticle' })
+          dispatch({ type: 'GET_ERROR', error: errorResponce.message, from: 'deleteLike' })
         }
       })
   })
